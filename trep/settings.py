@@ -21,6 +21,8 @@ logger = None
 conf = None
 
 
+ENV_VARIABLES_PREFIX = 'TREP_'
+
 def get_environment_params(conf, env2conf):
     """ Update configuration parameters with values from environment variables.
     """
@@ -28,7 +30,7 @@ def get_environment_params(conf, env2conf):
         path = v.split('.')
         container = reduce(lambda d, key: d.get(key), path[:-1], conf)
         print("Containder:%s" % container)
-        new_value = os.environ.get(k)
+        new_value = os.environ.get('%s_%s' % (ENV_VARIABLES_PREFIX, k))
         if new_value:
             print("\tNew value:%s" % new_value)
             try:
@@ -84,8 +86,6 @@ environment2configuration = {
     # 'LAUNCHPAD_PROJECT': 'launchpad.project',
     # 'LAUNCHPAD_MILESTONE': 'launchpad.milestone',
 
-    # 'XUNIT_REPORT': './nosetests.xml',
-
     'TESTRAIL_URL': 'testrail.url',
     'TESTRAIL_USER': 'testrail.username',
     'TESTRAIL_PASSWORD': 'testrail.password',
@@ -102,5 +102,5 @@ environment2configuration = {
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
 
     'LOG_LEVEL': 'common.log_level',
-    'LOGS_DIR': 'common.log_dir',
+    'LOG_DIR': 'common.log_dir',
 }
