@@ -92,11 +92,15 @@ environment2configuration = {
     'TESTRAIL_PROJECT': 'testrail.project',
     'TESTRAIL_MILESTONE': 'testrail.milestone',
     'TESTRAIL_TEST_SUITE': 'testrail.test_suite',
+    'TESTRAIL_TEST_PLAN': 'testrail.test_plan',
     'TESTRAIL_TEST_SECTION': 'testrail.test_section',
     'TESTRAIL_TEST_INCLUDE': 'testrail.test_include',
     'TESTRAIL_TEST_EXCLUDE': 'testrail.test_exclude',
     # 'TESTRAIL_TESTS_DEPTH': 'testrail.previous_results_depth',
     # 'TESTRAIL_OPERATING_SYSTEMS': 'testrail.operating_systems',
 
+    'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
+
+    'LOG_LEVEL': 'common.log_level',
     'LOGS_DIR': 'common.log_dir',
 }
