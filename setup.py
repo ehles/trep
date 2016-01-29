@@ -17,12 +17,12 @@ from os.path import join as pjoin
 from setuptools import setup, find_packages
 
 
-setup(name='treporter',
+setup(name='trep',
       version='0.1',
       packages=find_packages(),
-      scripts=[pjoin('start', 'treporter')],
+      scripts=[pjoin('start', 'trep')],
       data_files=[
-          ('etc', ['start/treporter.yaml'])],
+          ('etc', ['start/trep.yaml'])],
       install_requires=[
           'requests',
           'pytest-runner',

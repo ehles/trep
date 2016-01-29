@@ -57,8 +57,8 @@ def init_conf(local_conf=''):
     global logger
     if not conf:
         # Read configuration
-        # configs = ["/etc/treporter.yaml"]
-        configs = ["./treporter.yaml"]
+        # configs = ["/etc/trep.yaml"]
+        configs = ["./trep.yaml"]
         local_conf = local_conf or os.environ.get("LOCAL_CONF", None)
         if local_conf:
             configs.append(local_conf)
