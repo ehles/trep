@@ -30,7 +30,7 @@ def get_environment_params(conf, env2conf):
         path = v.split('.')
         container = reduce(lambda d, key: d.get(key), path[:-1], conf)
         print("Containder:%s" % container)
-        new_value = os.environ.get('%s_%s' % (ENV_VARIABLES_PREFIX, k))
+        new_value = os.environ.get('{}{}'.format(ENV_VARIABLES_PREFIX, k))
         if new_value:
             print("\tNew value:%s" % new_value)
             try:
