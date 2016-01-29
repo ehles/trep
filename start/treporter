@@ -20,12 +20,13 @@ import os
 
 
 def filename(string):
-    if not os.path.exists(string):
-        msg = "Path %r is not exists" % string
-        raise argparse.ArgumentTypeError(msg)
-    if not os.path.isfile(string):
-        msg = "File %r is not a file" % string
-        raise argparse.ArgumentTypeError(msg)
+    if string:
+        if not os.path.exists(string):
+            msg = "Path %r is not exists" % string
+            raise argparse.ArgumentTypeError(msg)
+        if not os.path.isfile(string):
+            msg = "File %r is not a file" % string
+            raise argparse.ArgumentTypeError(msg)
     return string
 
 
