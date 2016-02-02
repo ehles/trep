@@ -28,7 +28,7 @@ testrail:
       - 'Chrome'
 common:
   log_level: INFO
-  log_dir: /var/log/testrail_reporter.log
+  log_file: /var/log/testrail_reporter.log
 
 
 # TODO: Future improvemets regarding to Lauchpad bugs

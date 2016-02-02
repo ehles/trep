@@ -15,6 +15,7 @@
 import os
 import sys
 import logging
+import logging.handlers
 from metayaml import read
 
 logger = None
@@ -44,7 +45,14 @@ def get_logger():
     global logger
     if not logger:
         logger = logging.getLogger(__package__)
-        ch = logging.StreamHandler()
+        log_file = get_conf()['common']['log_file']
+        if log_file:
+            # Add the log message handler to the logger
+            ch = logging.handlers.RotatingFileHandler(log_file,
+                                                      maxBytes=10*1024*1024,
+                                                      backupCount=5)
+        else:
+            ch = logging.StreamHandler()
         formatter = logging.Formatter('%(asctime)s - '
                                       '%(levelname)s - '
                                       '%(message)s')
@@ -102,5 +110,5 @@ environment2configuration = {
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
 
     'LOG_LEVEL': 'common.log_level',
-    'LOG_DIR': 'common.log_dir',
+    'LOG_FILE': 'common.log_file',
 }
