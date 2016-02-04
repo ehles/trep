@@ -45,7 +45,8 @@ def main():
     args = parser.parse_args()
     conf, logger = init_conf(args.config)
     if args.verbose:
-        conf['common']['log_level'] = 'DEBUG'
+        conf['logging']['log_level'] = 'DEBUG'
+    logger.debug("Configuration: {}".format(conf))
 
     from trep.reporter import Reporter
     reporter = Reporter(

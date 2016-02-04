@@ -15,6 +15,7 @@
 import os
 import sys
 import logging
+import logging.handlers
 from metayaml import read
 
 logger = None
@@ -58,7 +59,7 @@ def get_logger():
                                       '%(message)s')
         ch.setFormatter(formatter)
         logger.addHandler(ch)
-        logger.setLevel(get_conf()['common']['log_level'])
+        logger.setLevel(get_conf()['logging']['log_level'])
     return logger
 
 
@@ -101,5 +102,5 @@ environment2configuration = {
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
 
     'LOG_LEVEL': 'common.log_level',
-    'LOG_DIR': 'common.log_dir',
+    'LOG_FILE': 'common.log_file',
 }
