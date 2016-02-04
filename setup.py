@@ -28,5 +28,5 @@ setup(name='trep',
           'pytest-runner',
           'xunitparser',
           'metayaml',
-          'functools32',]
+          'functools32']
       )

@@ -14,9 +14,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import argparse
-import logging
 import os
+import argparse
 
 
 def filename(string):
@@ -31,12 +30,6 @@ def filename(string):
 
 
 def main():
-    # TODO: Update configuration parameters from environment variables
-    # defaults = {
-    #     'CONFIG_FILE': 'config.yaml',
-    # }
-    # defaults = {k: os.environ.get(k, v) for k, v in defaults.items()}
-
     parser = argparse.ArgumentParser(description='Report to testrail')
 
     parser.add_argument('--config', '-c',
@@ -74,5 +67,4 @@ def main():
 
 
 if __name__ == '__main__':
-    logging.root.addHandler(logging.StreamHandler())
     main()

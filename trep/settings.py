@@ -23,16 +23,15 @@ conf = None
 
 ENV_VARIABLES_PREFIX = 'TREP_'
 
+
 def get_environment_params(conf, env2conf):
     """ Update configuration parameters with values from environment variables.
     """
     for k, v in env2conf.iteritems():
         path = v.split('.')
         container = reduce(lambda d, key: d.get(key), path[:-1], conf)
-        print("Containder:%s" % container)
         new_value = os.environ.get('{}{}'.format(ENV_VARIABLES_PREFIX, k))
         if new_value:
-            print("\tNew value:%s" % new_value)
             try:
                 container[path[-1]] = new_value
             except TypeError:
@@ -44,7 +43,16 @@ def get_logger():
     global logger
     if not logger:
         logger = logging.getLogger(__package__)
-        ch = logging.StreamHandler()
+        log_file = get_conf()['logging']['log_file']
+        if log_file:
+            # Add the log message handler to the logger
+            max_bytes = int(get_conf()['logging']['max_bytes'])
+            backup_count = int(get_conf()['logging']['backup_count'])
+            ch = logging.handlers.RotatingFileHandler(log_file,
+                                                      maxBytes=max_bytes,
+                                                      backupCount=backup_count)
+        else:
+            ch = logging.StreamHandler()
         formatter = logging.Formatter('%(asctime)s - '
                                       '%(levelname)s - '
                                       '%(message)s')
@@ -59,7 +67,6 @@ def init_conf(local_conf=''):
     global logger
     if not conf:
         # Read configuration
-        # configs = ["/etc/trep.yaml"]
         configs = ["./trep.yaml"]
         local_conf = local_conf or os.environ.get("LOCAL_CONF", None)
         if local_conf:
@@ -80,12 +87,6 @@ def get_conf():
 
 environment2configuration = {
     # Environment variables to configuration mapping
-    # 'JENKINS_URL': 'jenkins.url',
-    # 'JENKINS_VERSION_ARTIFACT': 'jenkins.version_artifact',
-
-    # 'LAUNCHPAD_PROJECT': 'launchpad.project',
-    # 'LAUNCHPAD_MILESTONE': 'launchpad.milestone',
-
     'TESTRAIL_URL': 'testrail.url',
     'TESTRAIL_USER': 'testrail.username',
     'TESTRAIL_PASSWORD': 'testrail.password',
@@ -96,8 +97,6 @@ environment2configuration = {
     'TESTRAIL_TEST_SECTION': 'testrail.test_section',
     'TESTRAIL_TEST_INCLUDE': 'testrail.test_include',
     'TESTRAIL_TEST_EXCLUDE': 'testrail.test_exclude',
-    # 'TESTRAIL_TESTS_DEPTH': 'testrail.previous_results_depth',
-    # 'TESTRAIL_OPERATING_SYSTEMS': 'testrail.operating_systems',
 
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
 

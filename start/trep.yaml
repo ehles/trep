@@ -26,9 +26,11 @@ testrail:
       - 'IE'
       - 'Firefox'
       - 'Chrome'
-common:
+logging:
   log_level: INFO
   log_dir: /var/log/testrail_reporter.log
+  max_bytes: ${10*1024*1024} # 10MB
+  backup_count: 10
 
 
 # TODO: Future improvemets regarding to Lauchpad bugs
