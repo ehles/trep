@@ -12,8 +12,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from functools32 import lru_cache
 import xunitparser
+from functools32 import lru_cache
 
 from .testrail import Client as TrClient
 from .testrail.client import Run
