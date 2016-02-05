@@ -22,7 +22,7 @@ setup(name='trep',
       packages=find_packages(),
       scripts=[pjoin('bin', 'trep')],
       data_files=[
-          ('etc/trep', ['configs/trep.yaml'])],
+          ('configs/trep', ['configs/trep.yaml'])],
       install_requires=[
           'requests',
           'pytest-runner',

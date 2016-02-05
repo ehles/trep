@@ -19,7 +19,7 @@ from functools32 import lru_cache
 @lru_cache()
 def root_directory(application_path=None):
     root_path = application_path or os.path.dirname(__file__)
-    while root_path and "bin" not in os.listdir(root_path):
+    while root_path and "configs" not in os.listdir(root_path):
         root_path = os.path.dirname(root_path)
     return root_path
 
@@ -27,4 +27,4 @@ def root_directory(application_path=None):
 @lru_cache()
 def config_stage_directory():
     root_path = root_directory()
-    return os.path.join(root_path, "etc")
+    return os.path.join(root_path, "configs")

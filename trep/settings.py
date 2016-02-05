@@ -15,6 +15,7 @@
 import os
 import sys
 import metayaml
+import pkg_resources
 import logging
 import logging.handlers
 
@@ -80,18 +81,27 @@ def init_conf(local_conf=''):
     if not conf:
         # Read configuration
         # FIXME: search configuration under virtualenv
-        if os.path.isfile(os.path.join(sys.prefix, 'local', 'etc', 'trep', 'trep.yaml')):
-            stage_config = GLOBAL_STAGE_CONFIG
-        elif os.path.isfile(os.path.join(sys.prefix, 'etc', 'trep', 'trep.yaml')):
-            stage_config = os.path.join(sys.prefix, GLOBAL_STAGE_CONFIG)
+        path_list = [
+            os.path.join(sys.prefix, 'local', 'etc', 'trep', 'trep.yaml'),
+            os.path.join(sys.prefix, 'etc', 'trep', 'trep.yaml'),
+            os.environ.get("TREP_CONFIG", os.path.join(helpers.config_stage_directory(), 'trep', 'trep.yaml')),
+            pkg_resources.resource_filename('trep', 'etc/trep/trep.yaml'),
+        ]
+        from pprint import pprint
+        pprint(path_list)
+        for path in path_list:
+            if os.path.isfile(path):
+                print('Configuration found under:%s' % path)
+                stage_config = path
+                break
         else:
-            stage_config = os.environ.get("TREP_CONFIG",
-                                          os.path.join(helpers.config_stage_directory(), "trep.yaml"))
+            print("Stage configuration not found")
         local_conf = local_conf or os.environ.get("LOCAL_CONF", None)
         configs = [stage_config]
         if local_conf:
             configs.append(local_conf)
-
+        if not configs:
+            return None, None
         for cfg in configs:
             if not os.path.isfile(cfg):
                 print('Config does not exist: %s' % cfg)

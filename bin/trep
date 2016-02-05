@@ -15,6 +15,7 @@
 #    under the License.
 
 import os
+import sys
 import argparse
 
 
@@ -44,6 +45,9 @@ def main():
     from trep.settings import init_conf
     args = parser.parse_args()
     conf, logger = init_conf(args.config)
+    if not conf:
+        print("No configuration")
+        sys.exit(1)
     if args.verbose:
         conf['logging']['log_level'] = 'DEBUG'
     logger.debug("Configuration: {}".format(conf))
