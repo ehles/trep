@@ -20,9 +20,9 @@ from setuptools import setup, find_packages
 setup(name='trep',
       version='0.1',
       packages=find_packages(),
-      scripts=[pjoin('start', 'trep')],
+      scripts=[pjoin('bin', 'trep')],
       data_files=[
-          ('etc', ['start/trep.yaml'])],
+          ('etc/trep', ['configs/trep.yaml'])],
       install_requires=[
           'requests',
           'pytest-runner',
