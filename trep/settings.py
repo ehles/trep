@@ -97,7 +97,7 @@ def init_conf(local_conf=''):
                                  "__FIX_ME__": fix_me,
                                  "join": os.path.join,
                                  "ROOT": helpers.root_directory(),
-                                 "env": os.environ,
+                                 # "env": os.environ,
                              })
     if not logger:
         logger = get_logger()
