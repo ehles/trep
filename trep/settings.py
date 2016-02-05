@@ -24,7 +24,7 @@ logger = None
 conf = None
 
 
-GLOBAL_STAGE_CONFIG = '/etc/trep/trep.yaml'
+GLOBAL_STAGE_CONFIG = 'etc/trep/trep.yaml'
 ENV_VARIABLES_PREFIX = 'TREP_'
 
 
@@ -79,8 +79,11 @@ def init_conf(local_conf=''):
     global logger
     if not conf:
         # Read configuration
-        if os.path.isfile(GLOBAL_STAGE_CONFIG):
+        # FIXME: search configuration under virtualenv
+        if os.path.isfile(os.path.join(sys.prefix, 'local', GLOBAL_STAGE_CONFIG)):
             stage_config = GLOBAL_STAGE_CONFIG
+        elif os.path.isfile(os.path.join(sys.prefix, GLOBAL_STAGE_CONFIG)):
+            stage_config = os.path.join(sys.prefix, GLOBAL_STAGE_CONFIG)
         else:
             stage_config = os.environ.get("TREP_CONFIG",
                                           os.path.join(helpers.config_stage_directory(), "trep.yaml"))
