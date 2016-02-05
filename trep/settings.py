@@ -14,14 +14,17 @@
 
 import os
 import sys
+import metayaml
 import logging
 import logging.handlers
-from metayaml import read
+
+import helpers
 
 logger = None
 conf = None
 
 
+GLOBAL_STAGE_CONFIG = '/etc/trep/trep.yaml'
 ENV_VARIABLES_PREFIX = 'TREP_'
 
 
@@ -63,16 +66,36 @@ def get_logger():
     return logger
 
 
+class PleaseFillRequiredParameter(Exception):
+    pass
+
+
+def fix_me():
+    raise PleaseFillRequiredParameter("Please fill parameter")
+
+
 def init_conf(local_conf=''):
     global conf
     global logger
     if not conf:
         # Read configuration
-        configs = ["./trep.yaml"]
+        if os.path.isfile(GLOBAL_STAGE_CONFIG):
+            stage_config = GLOBAL_STAGE_CONFIG
+        else:
+            stage_config = os.environ.get("TREP_CONFIG",
+                                          os.path.join(helpers.config_stage_directory(), "trep.yaml"))
         local_conf = local_conf or os.environ.get("LOCAL_CONF", None)
+        configs = [stage_config]
         if local_conf:
             configs.append(local_conf)
-        conf = read(configs)
+
+        conf = metayaml.read(configs,
+                             defaults={
+                                 "__FIX_ME__": fix_me,
+                                 "join": os.path.join,
+                                 "ROOT": helpers.root_directory(),
+                                 "env": os.environ,
+                             })
     if not logger:
         logger = get_logger()
     if not get_environment_params(conf, environment2configuration):
