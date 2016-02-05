@@ -27,4 +27,4 @@ def root_directory(application_path=None):
 @lru_cache()
 def config_stage_directory():
     root_path = root_directory()
-    return os.path.join(root_path, "configs")
+    return os.path.join(root_path, "etc")

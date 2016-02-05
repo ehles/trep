@@ -80,9 +80,9 @@ def init_conf(local_conf=''):
     if not conf:
         # Read configuration
         # FIXME: search configuration under virtualenv
-        if os.path.isfile(os.path.join(sys.prefix, 'local', GLOBAL_STAGE_CONFIG)):
+        if os.path.isfile(os.path.join(sys.prefix, 'local', 'etc', 'trep', 'trep.yaml')):
             stage_config = GLOBAL_STAGE_CONFIG
-        elif os.path.isfile(os.path.join(sys.prefix, GLOBAL_STAGE_CONFIG)):
+        elif os.path.isfile(os.path.join(sys.prefix, 'etc', 'trep', 'trep.yaml')):
             stage_config = os.path.join(sys.prefix, GLOBAL_STAGE_CONFIG)
         else:
             stage_config = os.environ.get("TREP_CONFIG",
@@ -92,6 +92,9 @@ def init_conf(local_conf=''):
         if local_conf:
             configs.append(local_conf)
 
+        for cfg in configs:
+            if not os.path.isfile(cfg):
+                print('Config does not exist: %s' % cfg)
         conf = metayaml.read(configs,
                              defaults={
                                  "__FIX_ME__": fix_me,
