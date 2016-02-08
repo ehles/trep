@@ -1,3 +1,14 @@
+trep
+----
+
+Sample Configuraton
+===================
+Here some special variables:
+* env
+* join
+* ROOT
+
+``` yaml
 test_results:
   source: xunit
   jenkins: # TODO: Add Jenkins support
@@ -14,9 +25,7 @@ testrail:
   milestone: 'Version 1.0'
   test_suite: 'Test Suite ${testrail.milestone}'
   test_plan: '${testrail.project} ${testrail.milestone}'
-  suite_configuraton: 'Configuration info'
-  plan_description: 'Test plan info'
-  run_description: 'Run ${testrail.test_suite}
+  test_run_description: 'Run ${testrail.test_suite}
     on ISO [#${env["ISO_ID"]}](${env["ISO_LINK"]})
 
     [Test results](${env["JOB_LINK"]})'
@@ -46,3 +55,5 @@ logging:
 #    release_statuses:
 #      released: 'Fix Released'
 #      invalid: 'Invalid'
+
+```    

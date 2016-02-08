@@ -24,13 +24,17 @@ from settings import logger
 
 class Reporter(object):
 
-    def __init__(self, xunit_report, iso_link, iso_id, env_description,
+    def __init__(self,
+                 xunit_report,
+                 plan_description,
+                 run_description,
+                 env_description,
                  test_results_link, *args, **kwargs):
         self._config = {}
         self._cache = {}
-        self.iso_link = iso_link
-        self.iso_id = iso_id
         self.xunit_report = xunit_report
+        self.plan_description = plan_description
+        self.run_description = run_description
         self.env_description = env_description
         self.test_results_link = test_results_link
         super(Reporter, self).__init__(*args, **kwargs)
@@ -81,9 +85,7 @@ class Reporter(object):
         return self.testrail_client.statuses
 
     def get_plan_name(self):
-        # FIXME: Plan name from config or params
         return get_conf()['testrail']['test_plan']
-        # return '{0.milestone_name} iso #{0.iso_id}'.format(self)
 
     def get_or_create_plan(self):
         """Get exists or create new TestRail Plan"""
@@ -91,7 +93,7 @@ class Reporter(object):
         plan = self.project.plans.find(name=plan_name)
         if plan is None:
             plan = self.project.plans.add(name=plan_name,
-                                          description=self.iso_link,
+                                          description=self.plan_description,
                                           milestone_id=self.milestone.id)
             logger.debug('Created new plan "{}"'.format(plan_name))
         else:
@@ -147,12 +149,8 @@ class Reporter(object):
 
     def create_test_run(self, plan, cases):
         suite_name = "{} ({})".format(self.suite.name, self.env_description)
-        description = (
-            'Run **{suite}** on iso [#{self.iso_id}]({self.iso_link}). \n'
-            '[Test results]({self.test_results_link})')
-        description = description.format(suite=suite_name, self=self)
         run = Run(name=suite_name,
-                  description=description,
+                  description=self.run_description,
                   suite_id=self.suite.id,
                   milestone_id=self.milestone.id,
                   config_ids=[],
@@ -162,6 +160,8 @@ class Reporter(object):
 
     def print_run_url(self, test_run):
         msg = '[TestRun URL] {}/index.php?/runs/view/{}'
+        logger.info(msg.format(self._config['testrail']['base_url'],
+                               test_run.id))
         print(msg.format(self._config['testrail']['base_url'], test_run.id))
 
     def execute(self):

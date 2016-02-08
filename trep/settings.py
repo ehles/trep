@@ -82,9 +82,12 @@ def init_conf(local_conf=''):
         # Read configuration
         # FIXME: search configuration under virtualenv
         path_list = [
+            os.path.join('configs', 'trep.yaml'),
             os.path.join(sys.prefix, 'local', 'etc', 'trep', 'trep.yaml'),
             os.path.join(sys.prefix, 'etc', 'trep', 'trep.yaml'),
-            os.environ.get("TREP_CONFIG", os.path.join(helpers.config_stage_directory(), 'trep', 'trep.yaml')),
+            os.environ.get("TREP_CONFIG",
+                           os.path.join(helpers.config_stage_directory(),
+                                        'trep', 'trep.yaml')),
             pkg_resources.resource_filename('trep', 'etc/trep/trep.yaml'),
         ]
         from pprint import pprint
@@ -110,7 +113,7 @@ def init_conf(local_conf=''):
                                  "__FIX_ME__": fix_me,
                                  "join": os.path.join,
                                  "ROOT": helpers.root_directory(),
-                                 # "env": os.environ,
+                                 "env": os.environ,
                              })
     if not logger:
         logger = get_logger()
@@ -125,6 +128,8 @@ def get_conf():
         conf = init_conf()
     return conf
 
+
+
 environment2configuration = {
     # Environment variables to configuration mapping
     'TESTRAIL_URL': 'testrail.url',
@@ -137,6 +142,9 @@ environment2configuration = {
     'TESTRAIL_TEST_SECTION': 'testrail.test_section',
     'TESTRAIL_TEST_INCLUDE': 'testrail.test_include',
     'TESTRAIL_TEST_EXCLUDE': 'testrail.test_exclude',
+    'TESTRAIL_PLAN_DESCRIPTION': 'testrail.plan_description',
+    'TESTRAIL_SUITE_CONFIGURATON': 'testrail.suite_configuraton',
+    'TESTRAIL_RUN_DESCRIPTION': 'testrail.run_description',
 
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
 
