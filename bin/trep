@@ -67,7 +67,7 @@ def main():
         password=conf['testrail']['password'],
         milestone=conf['testrail']['milestone'],
         project=conf['testrail']['project'],
-        tests_suite=conf['testrail']['test_suite'])
+        tests_suite=conf['testrail']['suite'])
     reporter.execute()
 
 

@@ -84,8 +84,13 @@ class Reporter(object):
     def testrail_statuses(self):
         return self.testrail_client.statuses
 
-    def get_plan_name(self):
+    @staticmethod
+    def get_plan_name():
         return get_conf()['testrail']['test_plan']
+
+    @staticmethod
+    def get_run_name():
+        return get_conf()['testrail']['test_run']
 
     def get_or_create_plan(self):
         """Get exists or create new TestRail Plan"""
@@ -148,8 +153,7 @@ class Reporter(object):
         return cases
 
     def create_test_run(self, plan, cases):
-        suite_name = "{} ({})".format(self.suite.name, self.env_description)
-        run = Run(name=suite_name,
+        run = Run(name=self.get_run_name(),
                   description=self.run_description,
                   suite_id=self.suite.id,
                   milestone_id=self.milestone.id,

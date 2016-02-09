@@ -12,11 +12,12 @@ testrail:
   password: 'password'
   project: 'Test Project'
   milestone: 'Version 1.0'
-  test_suite: 'Test Suite ${testrail.milestone}'
-  test_plan: '${testrail.project} ${testrail.milestone}'
+  suite: 'Test Suite ${testrail.milestone}'
+  plan: '${testrail.project} ${testrail.milestone}'
+  run: '${testrail.suite} ($(testrail.suite_configuraton))'
   suite_configuraton: 'Configuration info'
   plan_description: 'Test plan info'
-  run_description: 'Run ${testrail.test_suite}
+  run_description: 'Run ${testrail.suite}
     on ISO [#${env["ISO_ID"]}](${env["ISO_LINK"]})
 
     [Test results](${env["JOB_LINK"]})'
@@ -33,7 +34,7 @@ testrail:
       - 'Firefox'
       - 'Chrome'
 logging:
-  log_level: INFO
+  log_level: DEBUG
   log_file: ./trep.log
   max_bytes: ${10*1024*1024} # 10MB
   backup_count: 10

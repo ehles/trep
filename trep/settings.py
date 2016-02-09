@@ -137,14 +137,21 @@ environment2configuration = {
     'TESTRAIL_PASSWORD': 'testrail.password',
     'TESTRAIL_PROJECT': 'testrail.project',
     'TESTRAIL_MILESTONE': 'testrail.milestone',
-    'TESTRAIL_TEST_SUITE': 'testrail.test_suite',
-    'TESTRAIL_TEST_PLAN': 'testrail.test_plan',
+
+    'TESTRAIL_SUITE': 'testrail.suite',
+    'TESTRAIL_SUITE_CONFIGURATON': 'testrail.suite_configuraton',
+
+    'TESTRAIL_PLAN': 'testrail.plan',
+    'TESTRAIL_PLAN_DESCRIPTION': 'testrail.plan_description',
+
+
+    'TESTRAIL_RUN': 'testrail.run',
+    'TESTRAIL_RUN_DESCRIPTION': 'testrail.run_description',
+
     'TESTRAIL_TEST_SECTION': 'testrail.test_section',
     'TESTRAIL_TEST_INCLUDE': 'testrail.test_include',
     'TESTRAIL_TEST_EXCLUDE': 'testrail.test_exclude',
-    'TESTRAIL_PLAN_DESCRIPTION': 'testrail.plan_description',
-    'TESTRAIL_SUITE_CONFIGURATON': 'testrail.suite_configuraton',
-    'TESTRAIL_RUN_DESCRIPTION': 'testrail.run_description',
+
 
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
 

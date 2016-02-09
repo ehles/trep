@@ -1,8 +1,8 @@
 trep
 ----
 
-Sample Configuraton
-===================
+Sample Configuration
+====================
 Here some special variables:
 * env
 * join
