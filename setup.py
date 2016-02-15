@@ -26,7 +26,6 @@ setup(name='trep',
       install_requires=[
           'requests',
           'pytest-runner',
-          'xunitparser',
           'metayaml',
           'functools32']
       )

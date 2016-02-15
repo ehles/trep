@@ -12,7 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from trep.incoming import xunit
+from trep.incoming import xunit_items
 try:
     import unittest2 as unittest
 except ImportError:
@@ -23,9 +23,11 @@ class TestIncomingXUnit(unittest.TestCase):
 
     def test_item_one_test_suite(self):
         filename = 'tests/data/xunitresult_one_suite.xml'
-        itrr = xunit.SourceXUnit.get_itrr(filename)
+        itrr = xunit_items.SourceXUnitItems.get_itrr(filename)
+        itrr == {}
 
     def test_item_multi_test_suites(self):
         filename = 'tests/data/xunitresult_multi_suites.xml'
-        itrr = xunit.SourceXUnit.get_itrr(filename)
+        itrr = xunit_items.SourceXUnitItems.get_itrr(filename)
+        itrr == {}
 

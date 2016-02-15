@@ -122,11 +122,11 @@ class Item(object):
         else:
             self.__dict__[name] = value
 
-    def __repr__(self):
-        name = getattr(self, self.repr_field, '')
-        name = repr(name)
-        return '<{c.__name__}({s.id}) {name} at 0x{id:x}>'.format(
-            s=self, c=self.__class__, id=id(self), name=name)
+    # def __repr__(self):
+    #     name = getattr(self, self.repr_field, '')
+    #     name = repr(name)
+    #     return '<{c.__name__}({s.id}) {name} at 0x{id:x}>'.format(
+    #         s=self, c=self.__class__, id=id(self), name=name)
 
     @classmethod
     def get(cls, id):
@@ -263,7 +263,7 @@ class ResultCollection(Collection):
 class Result(Item):
     def __init__(self, status_id, comment=None, version=None, elapsed=None,
                  defects=None, assignedto_id=None, id=None, **kwargs):
-        add_kwargs = locals()
+        add_kwargs = locals().copy()
         add_kwargs.pop('self')
         add_kwargs.pop('kwargs')
         add_kwargs.pop('id')

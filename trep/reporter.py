@@ -12,12 +12,15 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import xunitparser
+from trep.vendor import xunitparser
 from functools32 import lru_cache
+from pprint import pformat
 
-from .testrail import Client as TrClient
-from .testrail.client import Run
+from trep import itrr
+from .outgoing.testrail import Client as TrClient
+from .outgoing.testrail.client import Run
 from .settings import get_conf
+from trep.incoming import source
 
 from settings import logger
 
@@ -57,12 +60,18 @@ class Reporter(object):
     @property
     @lru_cache()
     def project(self):
-        return self.testrail_client.projects.find(name=self.project_name)
+        project = self.testrail_client.projects.find(name=self.project_name)
+        if not project:
+            logger.error("Project not found:%s" % self.project_name)
+        return project
 
     @property
     @lru_cache()
     def milestone(self):
-        return self.project.milestones.find(name=self.milestone_name)
+        milestone = self.project.milestones.find(name=self.milestone_name)
+        if not milestone:
+            logger.error("Milestone not found:%s" % self.milestone_name)
+        return milestone
 
     @property
     @lru_cache()
@@ -72,7 +81,10 @@ class Reporter(object):
     @property
     @lru_cache()
     def suite(self):
-        return self.project.suites.find(name=self.tests_suite_name)
+        suite = self.project.suites.find(name=self.tests_suite_name)
+        if not suite:
+            logger.error("Test suite not found:%s" % suite)
+        return suite
 
     @property
     @lru_cache()
@@ -86,11 +98,11 @@ class Reporter(object):
 
     @staticmethod
     def get_plan_name():
-        return get_conf()['testrail']['test_plan']
+        return get_conf()['testrail']['plan']
 
     @staticmethod
     def get_run_name():
-        return get_conf()['testrail']['test_run']
+        return get_conf()['testrail']['run']
 
     def get_or_create_plan(self):
         """Get exists or create new TestRail Plan"""
@@ -107,17 +119,18 @@ class Reporter(object):
 
     def get_xunit_test_suite(self):
         with open(self.xunit_report) as f:
-            ts, tr = xunitparser.parse(f)
-            return ts, tr
+            suites = xunitparser.parse(f)
+            return suites
 
     def add_result_to_case(self, testrail_case, xunit_case):
-        if xunit_case.success:
+        itrr_result = xunit_case.get_result()
+        if itrr_result == itrr.TEST_RESULT_PASS:
             status_name = 'passed'
-        elif xunit_case.failed:
+        elif itrr_result == itrr.TEST_RESULT_FAIL:
             status_name = 'failed'
-        elif xunit_case.skipped:
+        elif itrr_result == itrr.TEST_RESULT_SKIP:
             status_name = 'skipped'
-        elif xunit_case.errored:
+        elif itrr_result == itrr.TEST_RESULT_BLOCKED:
             status_name = 'blocked'
         else:
             return
@@ -125,11 +138,13 @@ class Reporter(object):
                       if v == status_name]
         if len(status_ids) == 0:
             logger.warning("Can't find status {} for result {}".format(
-                status_name, xunit_case.methodname))
+                status_name, xunit_case.name))
             return
         status_id = status_ids[0]
-        comment = xunit_case.message
-        elasped = int(xunit_case.time.total_seconds())
+        case_info = xunit_case.get_info()
+        case_info['time'] = case_info['time'].seconds
+        comment = pformat(case_info)
+        elasped = case_info['time']
         if elasped > 0:
             elasped = "{}s".format(elasped)
         testrail_case.add_result(
@@ -141,8 +156,8 @@ class Reporter(object):
     def find_testrail_cases(self, xunit_suite):
         cases = self.suite.cases()
         filtered_cases = []
-        for xunit_case in xunit_suite:
-            test_name = xunit_case.methodname
+        for xunit_case in xunit_suite.test_cases:
+            test_name = xunit_case.name
             testrail_case = cases.find(custom_test_group=test_name)
             if testrail_case is None:
                 logger.warning('Testcase for {} not found'.format(test_name))
@@ -169,12 +184,13 @@ class Reporter(object):
         print(msg.format(self._config['testrail']['base_url'], test_run.id))
 
     def execute(self):
-        xunit_suite, _ = self.get_xunit_test_suite()
-        cases = self.find_testrail_cases(xunit_suite)
-        if len(cases) == 0:
-            logger.warning('No cases matched, program will terminated')
-            return
-        plan = self.get_or_create_plan()
-        test_run = self.create_test_run(plan, cases)
-        test_run.add_results_for_cases(cases)
-        self.print_run_url(test_run)
+        xunit_suites = source.TrepSource().get_itrr()
+        for xunit_suite in xunit_suites.test_results:
+            cases = self.find_testrail_cases(xunit_suite)
+            if len(cases) == 0:
+                logger.warning('No cases matched, program will terminated')
+                return
+            plan = self.get_or_create_plan()
+            test_run = self.create_test_run(plan, cases)
+            test_run.add_results_for_cases(cases)
+            self.print_run_url(test_run)

@@ -11,46 +11,33 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 from trep.vendor import xunitparser
 from trep import itrr as test_result
+from trep.incoming.xunit import SourceXUnit
 
 
 def prepare_source(conf):
-    return SourceXUnit(conf)
+    return SourceXUnitItems(conf)
 
 
-class SourceXUnit(object):
+class SourceXUnitItems(SourceXUnit):
 
     def __init__(self, conf):
         self.filename = conf['filename']
-
-    def get_itrr(self):
-        filename = self.filename
-        return self.get_itrr_by_filename(filename)
-
-    @staticmethod
-    def get_case_result(xunit_case):
-        if xunit_case.success:
-            return test_result.TEST_RESULT_PASS
-        elif xunit_case.failed:
-            return test_result.TEST_RESULT_FAIL
-        elif xunit_case.skipped:
-            return test_result.TEST_RESULT_SKIP
-        elif xunit_case.errored:
-            return test_result.TEST_RESULT_BLOCKED
-            # return test_result.TEST_RESULT_ERROR
-        else:
-            return None
+        self.case_name = conf['case_name']
 
     def get_itrr_by_filename(self, filename):
         itrr = test_result.ITRR()
+        ts = itrr.add_test_suite(name='')
         with open(filename) as f:
             for test_suite, tr in xunitparser.parse(f):
-                ts = itrr.add_test_suite(test_suite.name)
+                ts.name = test_suite.name
+                # Here test_suite means test_case
+                tc = ts.add_test_case(name=self.case_name)
                 for xunit_case in test_suite:
-                    tc = ts.add_test_case(xunit_case.methodname)
-                    ti = tc.add_test_item(None)
-                    result = SourceXUnit.get_case_result(xunit_case)
+                    ti = tc.add_test_item(xunit_case.methodname)
+                    result = SourceXUnitItems.get_case_result(xunit_case)
                     aux = {
                         'stdout': xunit_case.stdout,
                         'stderr': xunit_case.stderr,

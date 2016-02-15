@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+    <testsuite name="testsuite01" tests="4" errors="1" failures="1" skip="1">
+        <testcase name="ts1-testcase-01-pass" classname="trep.TestCase01" time="29">
+        </testcase>
+
+        <testcase name="ts1-testcase-02-skip" classname="trep.TestCase02" time="29">
+            <skipped />
+        </testcase>
+
+        <testcase name="ts1-testcase-03-failure" classname="trep.TestCase03" time="29">
+            <failure message="my failure message">my stack trace</failure>
+            <system-out>system-out tag contents</system-out>
+            <system-err>system-err tag contents</system-err>
+        </testcase>
+
+        <testcase name="ts1-testcase-04-error" classname="trep.TestCase04" time="29">
+            <error message="my error message">my crash report</error>
+            <system-out>system-out tag contents</system-out>
+            <system-err>system-err tag contents</system-err>
+        </testcase>
+
+    </testsuite>
+    <testsuite name="testsuite02" tests="4" errors="1" failures="1" skip="1">
+        <testcase name="ts2-testcase-01-pass" classname="trep.TestCase01" time="29">
+        </testcase>
+
+        <testcase name="ts2-testcase-02-skip" classname="trep.TestCase02" time="29">
+            <skipped />
+        </testcase>
+
+        <testcase name="ts2-testcase-03-failure" classname="trep.TestCase03" time="29">
+            <failure message="my failure message">my stack trace</failure>
+            <system-out>system-out tag contents</system-out>
+            <system-err>system-err tag contents</system-err>
+        </testcase>
+
+        <testcase name="ts2-testcase-04-error" classname="trep.TestCase04" time="29">
+            <error message="my error message">my crash report</error>
+            <system-out>system-out tag contents</system-out>
+            <system-err>system-err tag contents</system-err>
+        </testcase>
+
+    </testsuite>
+</testsuites>

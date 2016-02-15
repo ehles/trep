@@ -99,7 +99,7 @@ def init_conf(local_conf=''):
                 break
         else:
             print("Stage configuration not found")
-        local_conf = local_conf or os.environ.get("LOCAL_CONF", None)
+        local_conf = local_conf or os.environ.get("{}LOCAL_CONF".format(ENV_VARIABLES_PREFIX), None)
         configs = [stage_config]
         if local_conf:
             configs.append(local_conf)
