@@ -28,4 +28,3 @@ class TestIncomingXUnit(unittest.TestCase):
     def test_item_multi_test_suites(self):
         filename = 'tests/data/xunitresult_multi_suites.xml'
         itrr = xunit.SourceXUnit.get_itrr(filename)
-
