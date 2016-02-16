@@ -155,6 +155,9 @@ environment2configuration = {
 
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
 
+    'TEST_RESULTS_XUNIT_ITEMS_FILENAME': 'test_results.xunit_items.filename',
+    'TEST_RESULTS_XUNIT_ITEMS_CASE_NAME': 'test_results.xunit_items.case_name',
+
     'LOG_LEVEL': 'logging.log_level',
     'LOG_FILE': 'logging.log_file',
 }
