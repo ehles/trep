@@ -54,7 +54,6 @@ def main():
 
     from trep.reporter import Reporter
     reporter = Reporter(
-        xunit_report=conf['test_results']['xunit']['filename'],
         plan_description=conf['testrail']['plan_description'],
         run_description=conf['testrail']['run_description'],
         env_description=conf['testrail']['suite_configuraton'],

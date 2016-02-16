@@ -28,14 +28,12 @@ from settings import logger
 class Reporter(object):
 
     def __init__(self,
-                 xunit_report,
                  plan_description,
                  run_description,
                  env_description,
                  test_results_link, *args, **kwargs):
         self._config = {}
         self._cache = {}
-        self.xunit_report = xunit_report
         self.plan_description = plan_description
         self.run_description = run_description
         self.env_description = env_description
@@ -116,11 +114,6 @@ class Reporter(object):
         else:
             logger.debug('Founded plan "{}"'.format(plan_name))
         return plan
-
-    def get_xunit_test_suite(self):
-        with open(self.xunit_report) as f:
-            suites = xunitparser.parse(f)
-            return suites
 
     def add_result_to_case(self, testrail_case, xunit_case):
         itrr_result = xunit_case.get_result()
