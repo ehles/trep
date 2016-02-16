@@ -5,6 +5,9 @@ test_results:
     version_artifact: 'version.yaml.txt'
   xunit:
     filename: nosetests.xml
+  xunit_items:
+    filename: nosetests_items.xml
+    case_name: 'case_name'
 
 testrail:
   url: 'https://mirantis.testrail.com'
@@ -20,7 +23,7 @@ testrail:
   run_description: 'Run ${testrail.suite}
     on ISO [#${env["ISO_ID"]}](${env["ISO_LINK"]})
 
-    [Test results](${env["JOB_LINK"]})'
+    [${env["JOB_NAME"]}](${env["JOB_URL"]})'
   test_section: 'All' # TODO: Add TestRail Suite section support
   test_include: null # TODO: Add Include or Exclude test cases from reporting
   test_exclude: null

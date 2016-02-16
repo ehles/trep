@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #    Copyright 2016 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -13,19 +12,22 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from os.path import join as pjoin
-from setuptools import setup, find_packages
+from trep.incoming import xunit_items
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 
-setup(name='trep',
-      version='0.1',
-      packages=find_packages(),
-      scripts=[pjoin('bin', 'trep')],
-      data_files=[
-          ('configs/trep', ['configs/trep.yaml'])],
-      install_requires=[
-          'requests',
-          'pytest-runner',
-          'metayaml',
-          'functools32']
-      )
+class TestIncomingXUnit(unittest.TestCase):
+
+    def test_item_one_test_suite(self):
+        filename = 'tests/data/xunitresult_one_suite.xml'
+        itrr = xunit_items.SourceXUnitItems.get_itrr(filename)
+        itrr == {}
+
+    def test_item_multi_test_suites(self):
+        filename = 'tests/data/xunitresult_multi_suites.xml'
+        itrr = xunit_items.SourceXUnitItems.get_itrr(filename)
+        itrr == {}
+

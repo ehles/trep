@@ -99,7 +99,7 @@ def init_conf(local_conf=''):
                 break
         else:
             print("Stage configuration not found")
-        local_conf = local_conf or os.environ.get("LOCAL_CONF", None)
+        local_conf = local_conf or os.environ.get("{}LOCAL_CONF".format(ENV_VARIABLES_PREFIX), None)
         configs = [stage_config]
         if local_conf:
             configs.append(local_conf)
@@ -154,6 +154,9 @@ environment2configuration = {
 
 
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
+
+    'TEST_RESULTS_XUNIT_ITEMS_FILENAME': 'test_results.xunit_items.filename',
+    'TEST_RESULTS_XUNIT_ITEMS_CASE_NAME': 'test_results.xunit_items.case_name',
 
     'LOG_LEVEL': 'logging.log_level',
     'LOG_FILE': 'logging.log_file',
