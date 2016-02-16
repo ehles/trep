@@ -152,6 +152,7 @@ environment2configuration = {
     'TESTRAIL_TEST_INCLUDE': 'testrail.test_include',
     'TESTRAIL_TEST_EXCLUDE': 'testrail.test_exclude',
 
+    'TEST_RESULTS_SOURCE': 'test_results.source',
 
     'TEST_RESULTS_XUNIT_FILENAME': 'test_results.xunit.filename',
 
