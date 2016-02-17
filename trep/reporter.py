@@ -74,7 +74,7 @@ class Reporter(object):
     @property
     @lru_cache()
     def os_config(self):
-        return self.project.configs.find(name='Operation System')
+        return self.project.configs.find(name='Operating System')
 
     @property
     @lru_cache()
@@ -110,9 +110,9 @@ class Reporter(object):
             plan = self.project.plans.add(name=plan_name,
                                           description=self.plan_description,
                                           milestone_id=self.milestone.id)
-            logger.debug('Created new plan "{}"'.format(plan_name))
+            logger.debug('Plan created"{}"'.format(plan_name))
         else:
-            logger.debug('Founded plan "{}"'.format(plan_name))
+            logger.debug('Plan found "{}"'.format(plan_name))
         return plan
 
     def add_result_to_case(self, testrail_case, xunit_case):
@@ -160,14 +160,21 @@ class Reporter(object):
         cases[:] = filtered_cases
         return cases
 
-    def create_test_run(self, plan, cases):
-        run = Run(name=self.get_run_name(),
-                  description=self.run_description,
-                  suite_id=self.suite.id,
-                  milestone_id=self.milestone.id,
-                  config_ids=[],
-                  case_ids=[x.id for x in cases])
-        plan.add_run(run)
+    def get_or_create_test_run(self, plan, cases):
+        """Get exists or create new TestRail Run"""
+        run_name = self.get_run_name()
+        run = plan.runs.find(name=run_name)
+        if run is None:
+            run = Run(name=run_name,
+                      description=self.run_description,
+                      suite_id=self.suite.id,
+                      milestone_id=self.milestone.id,
+                      config_ids=[],
+                      case_ids=[x.id for x in cases])
+            plan.add_run(run)
+            logger.debug('Run created "{}"'.format(run_name))
+        else:
+            logger.debug('Run found"{}"'.format(run_name))
         return run
 
     def print_run_url(self, test_run):
@@ -184,6 +191,6 @@ class Reporter(object):
                 logger.warning('No cases matched, program will terminated')
                 return
             plan = self.get_or_create_plan()
-            test_run = self.create_test_run(plan, cases)
+            test_run = self.get_or_create_test_run(plan, cases)
             test_run.add_results_for_cases(cases)
             self.print_run_url(test_run)

@@ -189,7 +189,7 @@ class Case(Item):
 class Plan(Item):
     def __init__(self, name, description=None, milestone_id=None,
                  entries=None, id=None, **kwargs):
-        add_kwargs = locals()
+        add_kwargs = locals().copy()
         add_kwargs.pop('self')
         add_kwargs.pop('kwargs')
         add_kwargs.pop('id')
@@ -214,12 +214,21 @@ class Plan(Item):
         result = self._handler('POST', url, json=request)
         run.id = result['runs'][0]['id']
 
+    @property
+    def runs(self):
+        ts = self.get(self.id)
+        runs = []
+        for entry in ts.entries:
+            runs.extend([Run(**x) for x in entry['runs']])
+        runs = ItemSet(runs)
+        return runs
+
 
 class Run(Item):
-    def __init__(self, suite_id, milestone_id, config_ids=(), name="",
+    def __init__(self, suite_id, milestone_id=None, config_ids=(), name="",
                  description="", include_all=False, case_ids=(),
                  assignedto_id=None, id=None, **kwargs):
-        add_kwargs = locals()
+        add_kwargs = locals().copy()
         add_kwargs.pop('self')
         add_kwargs.pop('kwargs')
         add_kwargs.pop('id')
