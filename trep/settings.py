@@ -123,10 +123,10 @@ def init_conf(local_conf=''):
                                  "ROOT": helpers.root_directory(),
                                  "env": os.environ,
                              })
-    if not logger:
-        logger = get_logger()
     if not get_environment_params(conf, environment2configuration):
         sys.exit(1)
+    if not logger:
+        logger = get_logger()
     return conf, logger
 
 
