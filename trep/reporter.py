@@ -196,17 +196,22 @@ class Reporter(object):
     #     return run
     #
     def check_need_create_run(self, plan, runs, cases):
+        logger.info('Search for run in test plan.')
         sc = self.suite.cases()
         case_ids = [x.id for x in sc]
 
+        logger.debug('Necessary cases: {}'.format(case_ids))
         for run in runs:
             logger.info('Check Run "{}" for cases'.format(run))
             tests = run.tests()
             run_case_ids = [c.case_id for c in tests]
+            logger.debug('Run cases: {}'.format(run_case_ids))
             # run_test_ids = [c.id for c in tests]
             if all(case_id in run_case_ids for case_id in case_ids):
                 logger.info('Run found "{}"'.format(run))
                 return run
+            else:
+                logger.debug("Run does not contain all cases, skip.")
         logger.info('Run not found')
         return None
 
