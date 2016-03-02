@@ -235,7 +235,7 @@ class Reporter(object):
 
         if run is None:
             logger.info('Run not found in plan "{}", create: "{}"'.format(
-                plan.title, run_name))
+                plan.name, run_name))
             # Create new test run with all cases from test suite
             suite_cases = self.suite.cases()
             run = Run(name=run_name,
@@ -243,7 +243,7 @@ class Reporter(object):
                       suite_id=self.suite.id,
                       milestone_id=self.milestone.id,
                       config_ids=[],
-                      # case_ids=[x.id for x in suite_cases]
+                      case_ids=[x.id for x in suite_cases]
                       )
             plan.add_run(run)
             logger.debug('Run created "{}"'.format(run_name))
