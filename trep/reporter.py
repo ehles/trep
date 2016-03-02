@@ -81,7 +81,7 @@ class Reporter(object):
     def suite(self):
         suite = self.project.suites.find(name=self.tests_suite_name)
         if not suite:
-            logger.error("Test suite not found:%s" % suite)
+            logger.error("Test suite not found:%s" % self.tests_suite_name)
         return suite
 
     @property
