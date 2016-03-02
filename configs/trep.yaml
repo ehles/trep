@@ -37,8 +37,9 @@ testrail:
       - 'Firefox'
       - 'Chrome'
 logging:
-  log_level: DEBUG
-  log_file: ./trep.log
+  log_destination: 'both'  # both, file, console
+  log_level: 'DEBUG'
+  log_file: './trep.log'
   max_bytes: ${10*1024*1024} # 10MB
   backup_count: 10
 

@@ -48,21 +48,29 @@ def get_logger():
     global logger
     if not logger:
         logger = logging.getLogger(__package__)
-        log_file = get_conf()['logging']['log_file']
-        if log_file:
-            # Add the log message handler to the logger
-            max_bytes = int(get_conf()['logging']['max_bytes'])
-            backup_count = int(get_conf()['logging']['backup_count'])
-            ch = logging.handlers.RotatingFileHandler(log_file,
-                                                      maxBytes=max_bytes,
-                                                      backupCount=backup_count)
-        else:
-            ch = logging.StreamHandler()
+        handlers = []
+        log_dst = get_conf()['logging']['log_destination']
+        if log_dst == 'both' or log_dst == 'file':
+            log_file = get_conf()['logging']['log_file']
+            if log_file:
+                # Add the log message handler to the logger
+                max_bytes = int(get_conf()['logging']['max_bytes'])
+                backup_count = int(get_conf()['logging']['backup_count'])
+                ch = logging.handlers.RotatingFileHandler(log_file,
+                                                          maxBytes=max_bytes,
+                                                          backupCount=backup_count)
+                handlers.append(ch)
+            else:
+                raise Exception("Logging set to '%s' but log_file is not set." % log_dst)
+
+        if log_dst == 'both' or log_dst == 'console':
+            handlers.append(logging.StreamHandler(sys.stdout))
         formatter = logging.Formatter('%(asctime)s - '
                                       '%(levelname)s - '
                                       '%(message)s')
-        ch.setFormatter(formatter)
-        logger.addHandler(ch)
+        for handler in handlers:
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
         logger.setLevel(get_conf()['logging']['log_level'])
     return logger
 
