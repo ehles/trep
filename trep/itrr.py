@@ -24,7 +24,7 @@ TEST_RESULT_BLOCKED = 'blocked'
 
 class ITRR(object):
     # available test statuses
-    testResults = {
+    TEST_RESULTS = {
         TEST_RESULT_PASS: 0,
         TEST_RESULT_FAIL: 1,
         TEST_RESULT_ERROR: 2,
@@ -86,21 +86,11 @@ class TestCase(object):
                     False: TEST_RESULT_PASS}[self.is_fail()]
 
     def get_info(self):
-        info = {
-            'stdout': '',
-            'stderr': '',
-            'time': timedelta(seconds=0),
-        }
+        info = {}
         if self.no_items():
             self.test_items[0].name = self.name
         for item in self.test_items:
-            info['stdout'] += '[%s] stdout:"%s";' % (item.name,
-                                                  item.info['stdout'] or '')
-
-            info['stderr'] += '[%s] stderr:"%s";' % (item.name,
-                                                  item.info['stderr'] or '')
-
-            info['time'] += item.info['time']
+            info[item.name] = item.info
         return info
 
 
@@ -108,20 +98,14 @@ class TestItem(object):
 
     def __init__(self, name):
         self.result = None
-        self.info = {
-            'stdout': '',
-            'stderr': '',
-            'time': timedelta(seconds=0),
-        }
+        self.info = {}
         self.name = name
 
     def add_result(self, result, info={}):
-        assert result in ITRR.testResults
+        assert result in ITRR.TEST_RESULTS
         self.result = result
         if info:
-            self.info['stdout'] = info.get('stdout', '')
-            self.info['stderr'] = info.get('stderr', '')
-            self.info['time'] = info.get('time', timedelta(seconds=0))
+            self.info.update(info)
 
 
 # class TestProject(object):

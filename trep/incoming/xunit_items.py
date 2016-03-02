@@ -11,7 +11,6 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
 from trep.vendor import xunitparser
 from trep import itrr as test_result
 from trep.incoming.xunit import SourceXUnit
@@ -38,10 +37,6 @@ class SourceXUnitItems(SourceXUnit):
                 for xunit_case in test_suite:
                     ti = tc.add_test_item(xunit_case.methodname)
                     result = SourceXUnitItems.get_case_result(xunit_case)
-                    aux = {
-                        'stdout': xunit_case.stdout,
-                        'stderr': xunit_case.stderr,
-                        'time': xunit_case.time,
-                    }
+                    aux = self.get_aux_info(xunit_case)
                     ti.add_result(result, info=aux)
         return itrr

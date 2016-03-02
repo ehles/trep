@@ -20,6 +20,7 @@ def prepare_source(conf):
 
 
 class SourceXUnit(object):
+    fields_from_results = ['time', 'stdout', 'stderr', 'trace', 'typename']
 
     def __init__(self, conf):
         self.filename = conf['filename']
@@ -27,6 +28,17 @@ class SourceXUnit(object):
     def get_itrr(self):
         filename = self.filename
         return self.get_itrr_by_filename(filename)
+
+    def get_aux_info(self, xunit_case):
+        aux_info = {}
+        for field in self.fields_from_results:
+            if field == 'time':
+                aux_info[field] = xunit_case.time
+            else:
+                value = getattr(xunit_case, field, None)
+                if value:
+                    aux_info[field] = value
+        return aux_info
 
     @staticmethod
     def get_case_result(xunit_case):
@@ -51,10 +63,6 @@ class SourceXUnit(object):
                     tc = ts.add_test_case(xunit_case.methodname)
                     ti = tc.add_test_item(None)
                     result = SourceXUnit.get_case_result(xunit_case)
-                    aux = {
-                        'stdout': xunit_case.stdout,
-                        'stderr': xunit_case.stderr,
-                        'time': xunit_case.time,
-                    }
+                    aux = self.get_aux_info(xunit_case)
                     ti.add_result(result, info=aux)
         return itrr

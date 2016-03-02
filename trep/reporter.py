@@ -11,8 +11,8 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+from datetime import timedelta
 
-from trep.vendor import xunitparser
 from functools32 import lru_cache
 from pprint import pformat
 
@@ -135,7 +135,8 @@ class Reporter(object):
             return
         status_id = status_ids[0]
         case_info = xunit_case.get_info()
-        case_info['time'] = case_info['time'].seconds
+        case_info['time'] = case_info.get('time',
+                                          timedelta(seconds=0)).seconds
         comment = pformat(case_info)
         elasped = case_info['time']
         if elasped > 0:
@@ -177,24 +178,6 @@ class Reporter(object):
             logger.debug('Run found"{}"'.format(run_name))
         return run
 
-    # def check_create_update_test_run(self, plan, cases):
-    #     plan_test_ids = [c.id for c in self.suite.cases()]
-    #
-    #     run_name = self.get_run_name()
-    #     run = plan.runs.find(name=run_name)
-    #     if run is None:
-    #         run = Run(name=run_name,
-    #                   description=self.run_description,
-    #                   suite_id=self.suite.id,
-    #                   milestone_id=self.milestone.id,
-    #                   config_ids=[],
-    #                   case_ids=[x.id for x in cases])
-    #         plan.add_run(run)
-    #         logger.debug('Run created "{}"'.format(run_name))
-    #     else:
-    #         logger.debug('Run found"{}"'.format(run_name))
-    #     return run
-    #
     def check_need_create_run(self, plan, runs, cases):
         logger.info('Search for run in test plan.')
         sc = self.suite.cases()
@@ -206,7 +189,6 @@ class Reporter(object):
             tests = run.tests()
             run_case_ids = [c.case_id for c in tests]
             logger.debug('Run cases: {}'.format(run_case_ids))
-            # run_test_ids = [c.id for c in tests]
             if all(case_id in run_case_ids for case_id in case_ids):
                 logger.info('Run found "{}"'.format(run))
                 return run
@@ -220,23 +202,7 @@ class Reporter(object):
         suite_cases = self.suite.cases()
         run_name = self.get_run_name()
         runs = plan.runs.find_all(name=run_name)
-        run = self.check_need_create_run(plan,
-                                         runs,
-                                         suite_cases)
-
-        # # for debug:
-        # case_ids = [x.id for x in suite_cases]
-        #
-        # tests = run.tests()
-        # run_case_ids = [c.case_id for c in tests]
-        # run_test_ids = [c.id for c in tests]
-        #
-        # plan_case_ids = []
-        # plan_test_ids = []
-        # for plan_entry in plan.entries:
-        #     for plan_run in plan_entry['runs']:
-        #         plan_test_ids.append(plan_run['id'])
-        #         run_tests =
+        run = self.check_need_create_run(plan, runs, suite_cases)
 
         if run is None:
             logger.info('Run not found in plan "{}", create: "{}"'.format(
@@ -252,52 +218,7 @@ class Reporter(object):
                       )
             plan.add_run(run)
             logger.debug('Run created "{}"'.format(run_name))
-        # else:
-        #     logger.info("Run found, id: {}".format(run.id))
-        #     # TestRun exists
-        #     # Check all cases from suite are in the test run
-        #     # for plan_entry in plan.entries:
-        #
-        #     if create_new_run:
-        #
-        #         # plan_entries = [entry for entry in plan.entries]
-        #         # if not any(self.suite.id == entry['suite_id'] for entry in plan_entries):
-        #         logger.info('Run create "{}" for suite "{}"'.format(
-        #             run_name, self.suite.name))
-        #         # Not all tests are belong to current test run
-        #         # Add test run with new test suite to current plan
-        #         run = Run(name=run_name,
-        #                   description=self.run_description,
-        #                   suite_id=self.suite.id,
-        #                   milestone_id=self.milestone.id,
-        #                   config_ids=[],
-        #                   include_all=True,
-        #                   # case_ids=[c.id for c in cases]
-        #         )
-        #         plan.add_run(run)
         return run
-
-        if False:
-            suite_cases = self.suite.cases()
-
-            tests = run.tests()
-
-            # test_plan_cases = plan.
-            # run_case_ids = [c.case_id for c in tests]
-            run_test_ids = [c.id for c in tests]
-            new_test_ids = []
-            for case in cases:
-                if case.id not in run_test_ids:
-                    logger.info('New case "{}" for run "{}"'.format(
-                        case.title, run.name))
-                    new_test_ids.append(case.case_id)
-            if new_test_ids:
-                logger.info('Update run "{}" with case_ids "{}"'.format(
-                    run.name, run_test_ids
-                ))
-                run.case_ids = run_test_ids
-                # run.update()
-                plan.add_cases(run)
 
     def print_run_url(self, test_run):
         msg = '[TestRun URL] {}/index.php?/runs/view/{}'
@@ -314,7 +235,5 @@ class Reporter(object):
                 return
             plan = self.get_or_create_plan()
             test_run = self.get_check_create_test_run(plan, cases)
-            # test_run = self.get_or_create_test_run(plan, cases)
-            # self.check_cases_inside_run(plan, test_run, cases)
             test_run.add_results_for_cases(cases)
             self.print_run_url(test_run)
