@@ -39,7 +39,6 @@ class ItemSet(list):
 
 
 class Collection(object):
-
     list_url = 'get_{name}s'
     add_url = 'add_{name}'
 
@@ -290,7 +289,6 @@ class Config(Item):
 
 
 class Client(object):
-
     def __init__(self, base_url, username, password):
         self.username = username
         self.password = password
@@ -329,3 +327,8 @@ class Client(object):
     def statuses(self):
         statuses = self._query('GET', 'get_statuses')
         return {x['id']: x['name'] for x in statuses}
+
+    @property
+    def case_types(self):
+        c_types = self._query('GET', 'get_case_types')
+        return c_types

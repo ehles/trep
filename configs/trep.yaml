@@ -27,15 +27,7 @@ testrail:
   test_section: 'All' # TODO: Add TestRail Suite section support
   test_include: null # TODO: Add Include or Exclude test cases from reporting
   test_exclude: null
-  suite_configurations: # TODO: Add support of TestRail configurations
-    'Operating systems':
-      - 'Linux'
-      - 'Windows'
-      - 'Mac OS X'
-    'Browser':
-      - 'IE'
-      - 'Firefox'
-      - 'Chrome'
+  automated_cases: True
 logging:
   log_destination: 'both'  # both, file, console
   log_level: 'DEBUG'
