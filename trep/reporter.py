@@ -182,9 +182,22 @@ class Reporter(object):
             logger.debug('Run found"{}"'.format(run_name))
         return run
 
+    def get_suite_cases(self):
+        suite_cases = []
+        if get_conf()['testrail']['automated_cases']:
+            logger.info('Add only automated tests')
+            for ct in self.case_types:
+                if ct['name'] == "Automated":
+                    suite_cases = self.suite.cases.find_all(type_id=ct['id'])
+                    break
+        else:
+            logger.info('Add all tests')
+            suite_cases = self.suite.cases()
+        return suite_cases
+
     def check_need_create_run(self, plan, runs, cases):
         logger.info('Search for run in test plan.')
-        sc = self.suite.cases()
+        sc = self.get_suite_cases()
         case_ids = [x.id for x in sc]
 
         logger.debug('Necessary cases: {}'.format(case_ids))
@@ -216,16 +229,7 @@ class Reporter(object):
                 plan.name, run_name))
 
             # Create new test run with cases from test suite
-            suite_cases = []
-            if get_conf()['testrail']['automated_cases']:
-                logger.info('Add only automated tests')
-                for ct in self.case_types:
-                    if ct['name'] == "Automated":
-                        suite_cases = self.suite.cases.find_all(type_id=ct['id'])
-                        break
-            else:
-                logger.info('Add all tests')
-                suite_cases = self.suite.cases.find()
+            suite_cases = self.get_suite_cases()
 
             if not suite_cases:
                 logger.error('Empty test cases set.')
