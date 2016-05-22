@@ -141,6 +141,7 @@ class Reporter(object):
         status_id = status_ids[0]
         case_info = xunit_case.get_info()
         case_info['time'] = case_info['time'].seconds
+        case_info['job_link'] = self.env_description
         comment = pformat(case_info)
         elasped = case_info['time']
         if elasped > 0:

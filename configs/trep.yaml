@@ -18,7 +18,7 @@ testrail:
   suite: 'Test Suite ${testrail.milestone}'
   plan: '${testrail.project} ${testrail.milestone}'
   run: '${testrail.suite} ($(testrail.suite_configuraton))'
-  suite_configuraton: 'Configuration info'
+  suite_configuraton: 'CI job link: [${env["JOB_NAME"]}](${env["JOB_URL"]})'
   plan_description: 'Test plan info'
   run_description: 'Run ${testrail.suite}
     on ISO [#${env["ISO_ID"]}](${env["ISO_LINK"]})
