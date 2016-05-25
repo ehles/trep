@@ -56,7 +56,7 @@ def main():
     reporter = Reporter(
         plan_description=conf['testrail']['plan_description'],
         run_description=conf['testrail']['run_description'],
-        env_description=conf['testrail']['suite_configuraton'],
+        env_description=conf['testrail']['suite_configuration'],
         test_results_link='JENKINS_JOB_LINK',
     )
 

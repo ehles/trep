@@ -147,7 +147,7 @@ environment2configuration = {
     'TESTRAIL_MILESTONE': 'testrail.milestone',
 
     'TESTRAIL_SUITE': 'testrail.suite',
-    'TESTRAIL_SUITE_CONFIGURATON': 'testrail.suite_configuration',
+    'TESTRAIL_SUITE_CONFIGURATION': 'testrail.suite_configuration',
 
     'TESTRAIL_PLAN': 'testrail.plan',
     'TESTRAIL_PLAN_DESCRIPTION': 'testrail.plan_description',
