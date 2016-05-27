@@ -1,0 +1,6 @@
+requests==2.9.1
+pytest-runner
+metayaml
+functools32
+pyopenssl
+pyasn1

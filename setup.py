@@ -16,6 +16,12 @@
 from os.path import join as pjoin
 from setuptools import setup, find_packages
 
+REQUIREMENTS = (
+    'requests',
+    'pytest-runner',
+    'metayaml',
+    'functools32'
+)
 
 setup(name='trep',
       version='0.1',
@@ -23,9 +29,5 @@ setup(name='trep',
       scripts=[pjoin('bin', 'trep')],
       data_files=[
           ('configs/trep', ['configs/trep.yaml'])],
-      install_requires=[
-          'requests',
-          'pytest-runner',
-          'metayaml',
-          'functools32']
+      install_requires=REQUIREMENTS
       )
