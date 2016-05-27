@@ -2,7 +2,7 @@ import math
 import unittest
 from datetime import timedelta
 from xml.etree import ElementTree
-
+from trep.settings import get_logger
 
 def to_timedelta(val):
     if val is None:
@@ -136,7 +136,11 @@ class Parser(object):
     TR_CLASS = TestResult
 
     def parse(self, source):
-        xml = ElementTree.parse(source)
+        try:
+            xml = ElementTree.parse(source)
+        except ElementTree.ParseError, e:
+            get_logger().error("Can not parse xunit file, error: {0}".format(e))
+            return []
         root = xml.getroot()
         return self.parse_root(root)
 

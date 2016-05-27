@@ -256,6 +256,9 @@ class Reporter(object):
 
     def execute(self):
         xunit_suites = source.TrepSource().get_itrr()
+        if not xunit_suites.test_results:
+            logger.info("Empty suite.")
+            return
         for xunit_suite in xunit_suites.test_results:
             cases = self.find_testrail_cases(xunit_suite)
             if len(cases) == 0:
