@@ -4,3 +4,4 @@ metayaml
 functools32
 pyopenssl
 pyasn1
+jinja2

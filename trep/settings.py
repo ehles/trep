@@ -19,7 +19,7 @@ import pkg_resources
 import logging
 import logging.handlers
 
-import helpers
+from helpers import tools
 
 logger = None
 conf = None
@@ -94,7 +94,7 @@ def init_conf(local_conf=''):
             os.path.join(sys.prefix, 'local', 'etc', 'trep', 'trep.yaml'),
             os.path.join(sys.prefix, 'etc', 'trep', 'trep.yaml'),
             os.environ.get("TREP_CONFIG",
-                           os.path.join(helpers.config_stage_directory(),
+                           os.path.join(tools.config_stage_directory(),
                                         'trep', 'trep.yaml')),
             pkg_resources.resource_filename('trep', 'etc/trep/trep.yaml'),
         ]
@@ -120,7 +120,7 @@ def init_conf(local_conf=''):
                              defaults={
                                  "__FIX_ME__": fix_me,
                                  "join": os.path.join,
-                                 "ROOT": helpers.root_directory(),
+                                 "ROOT": tools.root_directory(),
                                  "env": os.environ,
                              })
     if not get_environment_params(conf, environment2configuration):

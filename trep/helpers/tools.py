@@ -14,6 +14,7 @@
 
 import os
 from functools32 import lru_cache
+from jinja2 import Environment, PackageLoader
 
 
 @lru_cache()
@@ -28,3 +29,10 @@ def root_directory(application_path=None):
 def config_stage_directory():
     root_path = root_directory()
     return os.path.join(root_path, "configs")
+
+
+def get_rendered(tmpl_name, data):
+    env = Environment(loader=PackageLoader('trep', 'templates'))
+    template = env.get_template(tmpl_name)
+    rendered = template.render(data=data)
+    return rendered

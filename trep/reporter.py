@@ -21,6 +21,7 @@ from .outgoing.testrail import Client as TrClient
 from .outgoing.testrail.client import Run
 from .settings import get_conf
 from trep.incoming import source
+from trep.helpers import tools
 
 from settings import logger
 
@@ -141,8 +142,8 @@ class Reporter(object):
         status_id = status_ids[0]
         case_info = xunit_case.get_info()
         case_info['time'] = case_info['time'].seconds
-        case_info['job_link'] = self.env_description
-        comment = pformat(case_info)
+        case_info['env_description'] = self.env_description
+        comment = tools.get_rendered('case_result.tmpl', case_info)
         elasped = case_info['time']
         if elasped > 0:
             elasped = "{}s".format(elasped)
