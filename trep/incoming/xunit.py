@@ -11,6 +11,9 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
+import re
+
 from trep.vendor import xunitparser
 from trep import itrr as test_result
 
@@ -42,13 +45,30 @@ class SourceXUnit(object):
         else:
             return None
 
+    def methodname2case(self, methodname):
+        """Returns case name from test methodname
+        For example if test name is
+            "test_update_router_admin_state[id-a8902683-c788-4246-95c7-ad9c6d63a4d9]"
+        it returns test_update_router_admin_state
+        """
+        rex = r'(?P<name>[a-zA-Z0-9_]*)\[?'
+        result = re.search(rex, methodname)
+        if result is not None:
+            try:
+                case_name = result.group('name')
+                return str(case_name)
+            except AttributeError:
+                pass
+        else:
+            return None
+
     def get_itrr_by_filename(self, filename):
         itrr = test_result.ITRR()
         with open(filename) as f:
             for test_suite, tr in xunitparser.parse(f):
                 ts = itrr.add_test_suite(test_suite.name)
                 for xunit_case in test_suite:
-                    tc = ts.add_test_case(xunit_case.methodname)
+                    tc = ts.add_test_case(self.methodname2case(xunit_case.methodname))
                     ti = tc.add_test_item(None)
                     result = SourceXUnit.get_case_result(xunit_case)
                     aux = {

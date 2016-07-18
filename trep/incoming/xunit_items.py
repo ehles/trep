@@ -36,7 +36,7 @@ class SourceXUnitItems(SourceXUnit):
                 # Here test_suite means test_case
                 tc = ts.add_test_case(name=self.case_name)
                 for xunit_case in test_suite:
-                    ti = tc.add_test_item(xunit_case.methodname)
+                    ti = tc.add_test_item(self.methodname2case(xunit_case.methodname))
                     result = SourceXUnitItems.get_case_result(xunit_case)
                     aux = {
                         'stdout': xunit_case.stdout,
