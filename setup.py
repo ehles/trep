@@ -20,13 +20,15 @@ REQUIREMENTS = (
     'requests',
     'pytest-runner',
     'metayaml',
-    'functools32'
+    'functools32',
+    'Jinja2',
 )
 
 setup(name='trep',
       version='0.1',
       packages=find_packages(),
       scripts=[pjoin('bin', 'trep')],
+      package_data={'': ['templates/*']},
       data_files=[
           ('configs/trep', ['configs/trep.yaml'])],
       install_requires=REQUIREMENTS
