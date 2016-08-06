@@ -137,7 +137,6 @@ def get_conf():
     return conf
 
 
-
 environment2configuration = {
     # Environment variables to configuration mapping
     'TESTRAIL_URL': 'testrail.url',

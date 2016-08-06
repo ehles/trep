@@ -68,7 +68,7 @@ class TestCase(object):
         bad_results = {
             TEST_RESULT_FAIL,
             TEST_RESULT_ERROR,
-            TEST_RESULT_SKIP,
+            # TEST_RESULT_SKIP,  # Commented due to some setups looks like tests.
             TEST_RESULT_BLOCKED}
         if bad_results & item_results:
             return True
@@ -87,19 +87,11 @@ class TestCase(object):
 
     def get_info(self):
         info = {
-            'stdout': '',
-            'stderr': '',
             'time': timedelta(seconds=0),
         }
         if self.no_items():
             self.test_items[0].name = self.name
         for item in self.test_items:
-            info['stdout'] += '[%s] stdout:"%s";' % (item.name,
-                                                  item.info['stdout'] or '')
-
-            info['stderr'] += '[%s] stderr:"%s";' % (item.name,
-                                                  item.info['stderr'] or '')
-
             info['time'] += item.info['time']
         return info
 
@@ -119,18 +111,4 @@ class TestItem(object):
         assert result in ITRR.testResults
         self.result = result
         if info:
-            self.info['stdout'] = info.get('stdout', '')
-            self.info['stderr'] = info.get('stderr', '')
             self.info['time'] = info.get('time', timedelta(seconds=0))
-
-
-# class TestProject(object):
-#     pass
-#
-#
-# class TestPlan(object):
-#     pass
-#
-#
-# class TestRun(object):
-#     pass
