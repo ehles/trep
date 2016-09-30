@@ -313,15 +313,15 @@ class Client(object):
             'Content-type': 'application/json',
             'Authorization': 'Basic %s' % self.token
         }
-        logging.debug('Request {0} to {1}'.format(method, url))
+        logger.debug('Request {0} to {1}'.format(method, url))
         while True:
             response = requests.request(
                 method, url, allow_redirects=False, **kwargs)
             if response.status_code == 429:
                 # get timeout from response or 1 second
                 timeout = float(response.headers.get('Retry-After', 1))
-                logging.debug('headers:{0}'.format(response.headers))
-                logging.info('Too many requests happens, wait {0} sec.'.format(timeout))
+                logger.debug('headers:{0}'.format(response.headers))
+                logger.info('Too many requests happens, wait {0} sec.'.format(timeout))
                 time.sleep(timeout)
                 continue
             elif response.status_code >= 300:
@@ -335,7 +335,7 @@ class Client(object):
                 break
         result = response.json()
         if 'error' in result:
-            logging.warning(result)
+            logger.warning(result)
         return result
 
     @property
