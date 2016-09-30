@@ -12,8 +12,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import logging
 import requests
+import logging
+import base64
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -289,12 +291,16 @@ class Config(Item):
 
 
 class Client(object):
-    def __init__(self, base_url, username, password):
-        self.username = username
-        self.password = password
-        self._base_url = base_url
+    token = ''
 
+    def __init__(self, base_url, username, password):
+        self._base_url = base_url
         Item._handler = self._query
+        self.update_token(username, password)
+
+    def update_token(self, user, password):
+        self.token = base64.b64encode('%s:%s' % (user, password))
+        return self.token
 
     @property
     def base_url(self):
@@ -303,20 +309,33 @@ class Client(object):
 
     def _query(self, method, url, **kwargs):
         url = self.base_url + url
-        kwargs['auth'] = (self.username, self.password)
-        kwargs['headers'] = {'Content-type': 'application/json'}
-        logger.debug('Make {} request to {}'.format(method, url))
-        response = requests.request(
-            method, url, allow_redirects=False, **kwargs)
-        if response.status_code >= 300:
-            raise Exception(
-                "Wrong response:\n"
-                "status_code: {0.status_code}\n"
-                "headers: {0.headers}\n"
-                "content: '{0.content}'".format(response))
+        kwargs['headers'] = {
+            'Content-type': 'application/json',
+            'Authorization': 'Basic %s' % self.token
+        }
+        logging.debug('Request {0} to {1}'.format(method, url))
+        while True:
+            response = requests.request(
+                method, url, allow_redirects=False, **kwargs)
+            if response.status_code == 429:
+                # get timeout from response or 1 second
+                timeout = float(response.headers.get('Retry-After', 1))
+                logging.debug('headers:{0}'.format(response.headers))
+                logging.info('Too many requests happens, wait {0} sec.'.format(timeout))
+                time.sleep(timeout)
+                continue
+            elif response.status_code >= 300:
+                raise Exception(
+                    "Wrong response:\n"
+                    "status_code: {0.status_code}\n"
+                    "headers: {0.headers}\n"
+                    "content: '{0.content}'".format(response))
+            else:
+                # no exceptions, all done
+                break
         result = response.json()
         if 'error' in result:
-            logger.warning(result)
+            logging.warning(result)
         return result
 
     @property
